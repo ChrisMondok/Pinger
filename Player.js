@@ -53,15 +53,28 @@ Player.prototype.tick = function(e) {
 };
 
 Player.prototype.move = function(e) {
+	var i;
+
 	if(this.x == this.targetX && this.y == this.targetY)
 		return;
 
 	var s = this.maxSpeed * e.dt/1000;
 
+	var oldX = Math.round(this.x);
+	var oldY = Math.round(this.y);
 	this.x = Math.max(this.x - s, Math.min(this.x + s, this.targetX));
 	this.y = Math.max(this.y - s, Math.min(this.y + s, this.targetY));
 
-	this.gameBoard.dig(Math.round(this.x), Math.round(this.y));
+	if(this.x != oldX) {
+		for(i = Math.min(Math.round(this.x), oldX); i <= Math.max(Math.round(this.x), oldX); i++) {
+			this.gameBoard.dig(i, Math.round(this.y));
+		}
+	}
+	if(this.y != oldY) {
+		for(i = Math.min(Math.round(this.y), oldY); i <= Math.max(Math.round(this.y), oldY); i++) {
+			this.gameBoard.dig(Math.round(this.x), i);
+		}
+	}
 }
 
 Player.prototype.moveTo = function(x, y) {
