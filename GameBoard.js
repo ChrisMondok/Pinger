@@ -28,6 +28,8 @@
 		this.viewportX = 0;
 		this.viewportY = 0;
 
+		this.goldCount = 0;
+
 		makeDOM.apply(this);
 
 		this.pawns = [];
@@ -40,27 +42,32 @@
 			}
 		}
 
-		var score = 0;
+		var dug = 0;
 
-		Object.defineProperty(this, 'score', {
-			get: function() {return score;},
+		Object.defineProperty(this, 'dug', {
+			get: function() {return dug;},
 			set: function(value) {
-				var oldScore = score;
-				score = value;
-				this.scoreChanged(oldScore);
+				var old = dug;
+				dug = value;
+				this.dugChanged(old);
 			}
 		});
 
-		this.scoreChanged(0);
+		this.dugChanged(0);
 	};
 })(window);
 
-GameBoard.prototype.scoreChanged = function(oldScore) {
-	this.scoreboard.innerHTML = ["Score:",this.score,"points"].join(' ');
+GameBoard.prototype.backgroundColor = "#aad1f8";
+
+GameBoard.prototype.dugChanged = function() {
+	this.scoreboard.innerHTML = ["Dirt dug:",this.dug].join(' ');
 };
 
 GameBoard.prototype.dig = function(x, y) {
-	this.dirt[x][y] = false;
+	if(this.dirt[x][y]) {
+		this.dug++;
+		this.dirt[x][y] = false;
+	}
 
 	this.getPawnsOfType(Gold).filter(function(gold) {
 		return gold.x == Math.round(x) && gold.y == Math.round(y);
@@ -97,6 +104,8 @@ GameBoard.prototype.getPawnsOfType = function(type) {
 };
 
 GameBoard.prototype.spawn = function(cls, x, y) {
+	if(cls == Gold)
+		this.goldCount ++;
 	var pawn = new cls(this, x, y);
 	this.pawns.push(pawn);
 	return pawn;
@@ -140,6 +149,8 @@ GameBoard.prototype.adjustViewport = function() {
 GameBoard.prototype.draw = function(ctx) {
 	usingState(ctx, function() {
 		ctx.clearRect(0, 0, viewportWidth, viewportHeight);
+		ctx.fillStyle = this.backgroundColor;
+		ctx.fillRect(0, 0, viewportWidth, viewportHeight);
 
 		ctx.translate(-this.viewportX, -this.viewportY);
 
@@ -149,11 +160,45 @@ GameBoard.prototype.draw = function(ctx) {
 
 		for(var i = 0; i < this.pawns.length; i++)
 			this.pawns[i].draw(ctx);
+
 	}, this);
+
+	this.drawHud(ctx);
 };
+
+GameBoard.prototype.drawHud = function(ctx) {
+	var goldRemaining = this.getPawnsOfType(Gold).length;
+
+	ctx.strokeStyle = "gold";
+	ctx.beginPath();
+	ctx.lineWidth = 5;
+	ctx.arc(
+		viewportWidth - 48,
+		48,
+		32,
+		0,
+		2*Math.PI * ((this.goldCount - goldRemaining) / this.goldCount),
+		false
+	);
+	ctx.moveTo(viewportWidth - 64, 50);
+	ctx.lineTo(viewportWidth - 32, 50);
+	ctx.stroke();
+	usingState(ctx, function() {
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		ctx.fillStyle = "gold";
+		ctx.shadowBlur = 5;
+		ctx.shadowColor = 'black';
+		ctx.font = "28px sans-serif";
+		ctx.fillText(this.goldCount - goldRemaining, viewportWidth-48, 32);
+		ctx.font = "20px sans-serif";
+		ctx.fillText(this.goldCount, viewportWidth-48, 66);
+	}, this);
+}
 
 GameBoard.prototype.drawGrid = function(ctx) {
 	ctx.strokeStyle = "rgba(0,0,0,0.25)";
+	ctx.lineWidth = 1;
 	ctx.beginPath();
 	for(var x = 0; x < this.width; x += 1) {
 		ctx.moveTo(x * GRIDSIZE, 0);
@@ -168,13 +213,15 @@ GameBoard.prototype.drawGrid = function(ctx) {
 };
 
 GameBoard.prototype.drawGround = function(ctx) {
-	ctx.fillStyle = "#6c513c";
 
 	//ctx.fillRect(0, 1*GRIDSIZE, this.width * GRIDSIZE, (this.height - 1) * GRIDSIZE);
-	for(var y = 0; y < this.height; y++) {
+	for(var y = 1; y < this.height; y++) {
 		for(var x = 0; x < this.width; x++) {
 			if(this.dirt[x][y])
-				ctx.fillRect(x * GRIDSIZE, y * GRIDSIZE, GRIDSIZE, GRIDSIZE);
+				ctx.fillStyle = "#6c513c";
+			else
+				ctx.fillStyle = "#d8a278";
+			ctx.fillRect(x * GRIDSIZE, y * GRIDSIZE, GRIDSIZE, GRIDSIZE);
 		}
 	}
 };

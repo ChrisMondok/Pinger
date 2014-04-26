@@ -2,6 +2,20 @@ var Player = extend(Pawn, function() {
 	Pawn.apply(this, arguments);
 	this.targetX = this.x;
 	this.targetY = this.y;
+
+	this.div = document.createElement('div');
+
+	var pingButton = document.createElement('button');
+	pingButton.innerHTML = 'Ping';
+	pingButton.addEventListener('click', this.ping.bind(this));
+
+	var clearButton = document.createElement('button');
+	clearButton.innerHTML = 'Clear';
+	clearButton.addEventListener('click', this.clear.bind(this));
+
+	this.div.appendChild(pingButton);
+	this.div.appendChild(clearButton);
+	this.gameBoard.div.appendChild(this.div);
 });
 
 Player.prototype.maxSpeed = 4;
@@ -75,10 +89,9 @@ Player.prototype.move = function(e) {
 			this.gameBoard.dig(Math.round(this.x), i);
 		}
 	}
-}
+};
 
 Player.prototype.moveTo = function(x, y) {
-	console.log("Move to "+x+", "+y);
 	this.targetX = x;
 	this.targetY = y;
 };
@@ -96,5 +109,21 @@ Player.prototype.keyHandler = function(e) {
 		return;
 
 	if(e.key == 'Spacebar' || e.which == 32)
-		this.gameBoard.spawn(Pulse, this.x, this.y);
-}
+		this.ping();
+
+	if(e.key == 'c' || e.which == 99)
+		this.clear();
+};
+
+Player.prototype.ping = function() {
+	this.gameBoard.spawn(Pulse, this.x, this.y);
+};
+
+Player.prototype.clear = function() {
+	this.gameBoard.getPawnsOfType(Ring).forEach(function(r) {r.destroy();});
+};
+
+Player.prototype.destroy = function() {
+	Pawn.prototype.destroy.apply(this, arguments);
+	this.pingButton.parentNode.removeChild(this.pingButton);
+};

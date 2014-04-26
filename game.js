@@ -16,7 +16,7 @@ function init() {
 
 		last = now;
 		frames++;
-	}, 1000/30);
+	}, 1000/60);
 
 	setInterval(function() {
 		document.getElementById('frameRate').innerHTML = frames;
@@ -25,7 +25,13 @@ function init() {
 
 	window.game = new GameBoard();
 
-	window.player = game.spawn(Player, 5, 0);
+	window.player = game.spawn(Player, Math.round(window.game.width/2), 0);
+
+	for(var i = 0; i < 7; i++)
+		window.game.spawn(Gold, Math.floor(Math.random() * window.game.width), 1 + Math.floor(Math.random() * (window.game.height - 1)));
+
+	for(var i = 0; i < 3; i++)
+		window.game.spawn(Water, Math.floor(Math.random() * window.game.width), Math.floor(Math.random() * window.game.height));
 }
 
 function usingState(ctx, fn, scope) {

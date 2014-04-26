@@ -19,12 +19,15 @@ Gold.prototype.radius = 4;
 Gold.prototype.collect = function() {
 	this.gameBoard.score += 5;
 	sounds.get.play();
+	var remnant = game.spawn(Remnant, this.x, this.y);
+	remnant.offsetX = this.offsetX;
+	remnant.offsetY = this.offsetY;
 	this.destroy();
 };
 
 Gold.prototype.draw = function(ctx) {
 	return;
-	ctx.fillStyle = "#FFFF00";
+	ctx.fillStyle = "red";
 
 	ctx.beginPath();
 	ctx.arc(
