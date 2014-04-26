@@ -19,7 +19,7 @@ function init() {
 	}, 1000/30);
 
 	setInterval(function() {
-		document.getElementById('fpsDisplay').value = frames;
+		document.getElementById('frameRate').innerHTML = frames;
 		frames = 0;
 	}, 1000);
 

@@ -34,8 +34,9 @@ GameBoard.prototype.dig = function(x, y) {
 };
 
 GameBoard.prototype.clickHandler = function(e) {
-	var x = (e.clientX - this.canvas.offsetLeft) / GRIDSIZE;
-	var y = (e.clientY - this.canvas.offsetTop) / GRIDSIZE;
+	//these are grid coordinates, not pixel coordinates
+	var x = (e.clientX - this.canvas.offsetLeft + this.viewportX) / GRIDSIZE;
+	var y = (e.clientY - this.canvas.offsetTop + this.viewportY) / GRIDSIZE;
 
 	for(var i = 0; i < this.pawns.length; i++) {
 		if('clickHandler' in this.pawns[i])
@@ -54,6 +55,7 @@ GameBoard.prototype.removePawn = function(pawn) {
 };
 
 GameBoard.prototype.tick = function(tickEvent) {
+	this.adjustViewport();
 	for(var i = 0; i < this.pawns.length; i++)
 		this.pawns[i].tick(tickEvent);
 
@@ -61,6 +63,27 @@ GameBoard.prototype.tick = function(tickEvent) {
 		this.draw(this.ctx);
 	}
 };
+
+GameBoard.prototype.adjustViewport = function() {
+	var x = 0;
+	var y = 0;
+	var playerCount = 0;
+
+	for(var i = 0; i < this.pawns.length; i++) {
+		if(this.pawns[i] instanceof Player) {
+			x += this.pawns[i].x;
+			y += this.pawns[i].y;
+			playerCount++;
+		}
+	}
+
+	x = (x / playerCount + 0.5) * GRIDSIZE - viewportWidth / 2;
+	y = (y / playerCount + 0.5) * GRIDSIZE - viewportHeight / 2;
+
+
+	this.viewportX = Math.min(Math.max(0, x), this.width * GRIDSIZE - viewportWidth);
+	this.viewportY = Math.min(Math.max(0, y), this.height * GRIDSIZE - viewportHeight);
+}
 
 GameBoard.prototype.draw = function(ctx) {
 	usingState(ctx, function() {

@@ -19,6 +19,32 @@ Player.prototype.draw = function(ctx) {
 		false
 	);
 	ctx.fill();
+
+	if(this.x != this.targetX || this.y != this.targetY) {
+		ctx.strokeStyle = "#000";
+		var w = 3;
+		ctx.lineWidth = w;
+		ctx.beginPath();
+
+
+		ctx.moveTo(this.targetX * GRIDSIZE + w/2, (this.targetY + 1/3) * GRIDSIZE);
+		ctx.lineTo(this.targetX * GRIDSIZE + w/2, this.targetY * GRIDSIZE + w/2);
+		ctx.lineTo((this.targetX + 1/3) * GRIDSIZE, this.targetY * GRIDSIZE + w/2);
+
+		ctx.moveTo((this.targetX + 2/3) * GRIDSIZE, this.targetY * GRIDSIZE + w/2);
+		ctx.lineTo((this.targetX + 1) * GRIDSIZE - w/2, this.targetY * GRIDSIZE + w/2);
+		ctx.lineTo((this.targetX + 1) * GRIDSIZE - w/2, (this.targetY + 1/3) * GRIDSIZE);
+
+		ctx.moveTo(this.targetX * GRIDSIZE + w/2, (this.targetY + 2/3) * GRIDSIZE);
+		ctx.lineTo(this.targetX * GRIDSIZE + w/2, (this.targetY + 1) * GRIDSIZE - w/2);
+		ctx.lineTo((this.targetX + 1/3) * GRIDSIZE, (this.targetY + 1) * GRIDSIZE - w/2);
+
+		ctx.moveTo((this.targetX + 2/3) * GRIDSIZE, (this.targetY + 1)* GRIDSIZE - w/2);
+		ctx.lineTo((this.targetX + 1) * GRIDSIZE - w/2, (this.targetY + 1)* GRIDSIZE - w/2);
+		ctx.lineTo((this.targetX + 1) * GRIDSIZE - w/2, (this.targetY + 2/3) * GRIDSIZE);
+
+		ctx.stroke();
+	}
 };
 
 Player.prototype.tick = function(e) {
