@@ -4,6 +4,16 @@ var Gold = extend(Pawn, function() {
 	this.offsetY = Math.random() * (GRIDSIZE - 2 * this.radius) + this.radius;
 });
 
+Object.defineProperty(Gold.prototype, 'centerX', {
+	get: function() {return (this.x) * GRIDSIZE + this.offsetX;},
+	set: function() {throw "Trying to assign to read only property";}
+});
+
+Object.defineProperty(Gold.prototype, 'centerY', {
+	get: function() {return (this.y) * GRIDSIZE + this.offsetY;},
+	set: function() {throw "Trying to assign to read only property";}
+});
+
 Gold.prototype.radius = 4;
 
 Gold.prototype.collect = function() {
@@ -17,8 +27,8 @@ Gold.prototype.draw = function(ctx) {
 
 	ctx.beginPath();
 	ctx.arc(
-		this.x * GRIDSIZE + this.offsetX,
-		this.y * GRIDSIZE + this.offsetY,
+		this.centerX,
+		this.centerY,
 		this.radius,
 		0,
 		2*Math.PI,

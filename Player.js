@@ -12,8 +12,8 @@ Player.prototype.draw = function(ctx) {
 	ctx.fillStyle = "lime";
 	ctx.beginPath();
 	ctx.arc(
-		(0.5+this.x)*GRIDSIZE,
-		(0.5+this.y)*GRIDSIZE,
+		this.centerX,
+		this.centerY,
 		GRIDSIZE/2 - 3,
 		0,
 		2*Math.PI,
