@@ -4,7 +4,7 @@ function GameBoard(width, height) {
 
 	document.addEventListener('gametick', this.tickEventListener);
 
-	this.width = width || 20;
+	this.width = width || 40;
 	this.height = height || 20;
 
 	this.viewportX = 0;
@@ -13,44 +13,77 @@ function GameBoard(width, height) {
 	this.canvas = document.createElement('canvas');	
 	this.canvas.setAttribute('width', viewportWidth);
 	this.canvas.setAttribute('height', viewportHeight);
+	this.canvas.addEventListener('click', this.clickHandler.bind(this));
 	this.ctx = this.canvas.getContext('2d');
 
 	document.body.appendChild(this.canvas);
+
+	this.pawns = [];
 }
 
-GameBoard.prototype.tick = function() {
-	usingState(this.ctx, function() {
-		this.ctx.clearRect(0, 0, viewportWidth, viewportHeight);
+GameBoard.prototype.clickHandler = function(e) {
+	var x = (e.clientX - this.canvas.offsetLeft) / GRIDSIZE;
+	var y = (e.clientY - this.canvas.offsetTop) / GRIDSIZE;
 
-		this.ctx.translate(-this.viewportX, -this.viewportY);
+	for(var i = 0; i < this.pawns.length; i++) {
+		if('clickHandler' in this.pawns[i])
+			this.pawns[i].clickHandler(e, x, y);
+	}
+};
 
-		this.drawGround();
+GameBoard.prototype.spawn = function(cls) {
+	var pawn = new cls(this);
+	this.pawns.push(pawn);
+	return pawn;
+};
 
-		this.drawGrid();
+GameBoard.prototype.removePawn = function(pawn) {
+	this.pawns.splice(this.pawns.indexOf(pawn), 1);
+};
 
-		//draw all of the things
+GameBoard.prototype.tick = function(tickEvent) {
+	for(var i = 0; i < this.pawns.length; i++)
+		this.pawns[i].tick(tickEvent);
+
+	if(true) {
+		this.draw(this.ctx);
+	}
+};
+
+GameBoard.prototype.draw = function(ctx) {
+	usingState(ctx, function() {
+		ctx.clearRect(0, 0, viewportWidth, viewportHeight);
+
+		ctx.translate(-this.viewportX, -this.viewportY);
+
+		this.drawGround(ctx);
+
+		this.drawGrid(ctx);
+
+		for(var i = 0; i < this.pawns.length; i++)
+			this.pawns[i].draw(ctx);
 	}, this);
 };
 
-GameBoard.prototype.drawGrid = function() {
-	this.ctx.strokeStyle = "rgba(0,0,0,0.25)";
-	this.ctx.beginPath();
+GameBoard.prototype.drawGrid = function(ctx) {
+	ctx.strokeStyle = "rgba(0,0,0,0.25)";
+	ctx.beginPath();
 	for(var x = 0; x < this.width; x += 1) {
-		this.ctx.moveTo(x * GRIDSIZE, 0);
-		this.ctx.lineTo(x * GRIDSIZE, this.height * GRIDSIZE);
+		ctx.moveTo(x * GRIDSIZE, 0);
+		ctx.lineTo(x * GRIDSIZE, this.height * GRIDSIZE);
 	}
 	for(var y = 0; y < this.width; y += 1) {
-		this.ctx.moveTo(0, y * GRIDSIZE);
-		this.ctx.lineTo(this.width * GRIDSIZE, y * GRIDSIZE);
+		ctx.moveTo(0, y * GRIDSIZE);
+		ctx.lineTo(this.width * GRIDSIZE, y * GRIDSIZE);
 	}
-	this.ctx.stroke();
+	ctx.stroke();
 	return;
 };
 
-GameBoard.prototype.drawGround = function() {
-	this.ctx.fillStyle = "#6c513c";
+GameBoard.prototype.drawGround = function(ctx) {
+	ctx.fillStyle = "#6c513c";
 
-	this.ctx.fillRect(0, 1*GRIDSIZE, this.width * GRIDSIZE, (this.height - 1) * GRIDSIZE);
+	ctx.fillRect(0, 1*GRIDSIZE, this.width * GRIDSIZE, (this.height - 1) * GRIDSIZE);
 };
 
 GameBoard.prototype.destroy = function() {

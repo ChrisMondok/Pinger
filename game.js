@@ -3,12 +3,22 @@ var viewportWidth = 640;
 var viewportHeight = 480;
 
 function init() {
+
+	var last = new Date().getTime();
 	setInterval(function() {
-		var e = new CustomEvent('gametick');
-		document.dispatchEvent(e);
+		var now = new Date().getTime();
+
+		var tickEvent = new CustomEvent('gametick');
+		tickEvent.dt = now - last;
+
+		document.dispatchEvent(tickEvent);
+
+		last = now;
 	}, 1000/30);
 
-	window.g = new GameBoard();
+	window.game = new GameBoard();
+
+	window.player = game.spawn(Player);
 }
 
 function usingState(ctx, fn, scope) {
@@ -16,4 +26,12 @@ function usingState(ctx, fn, scope) {
 	fn.apply(scope);
 	ctx.restore();
 }
+
+function extend(base, ctor) {
+	var cls = ctor || function(){base.apply(this, arguments);};
+	cls.prototype = Object.create(base.prototype);
+	if(ctor) cls.prototype.constructor = ctor;
+	return cls;
+}
+
 window.addEventListener('load', init);
