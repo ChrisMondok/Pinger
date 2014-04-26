@@ -16,8 +16,11 @@
 
 	namespace.GameBoard = function(width, height) {
 		this.tickEventListener = this.tick.bind(this);
+		this.keypressListener = this.keyHandler.bind(this);
 
 		document.addEventListener('gametick', this.tickEventListener);
+
+		document.addEventListener('keypress', this.keypressListener);
 
 		this.width = width || 40;
 		this.height = height || 20;
@@ -75,6 +78,16 @@ GameBoard.prototype.clickHandler = function(e) {
 		if('clickHandler' in this.pawns[i])
 			this.pawns[i].clickHandler(e, x, y);
 	}
+};
+
+GameBoard.prototype.keyHandler = function(e) {
+	for(var i = 0; i < this.pawns.length; i++) {
+		if('keyHandler' in this.pawns[i])
+			this.pawns[i].keyHandler(e);
+	}
+
+	e.preventDefault();
+	e.stopPropagation();
 };
 
 GameBoard.prototype.getPawnsOfType = function(type) {
@@ -169,4 +182,5 @@ GameBoard.prototype.drawGround = function(ctx) {
 GameBoard.prototype.destroy = function() {
 	this.canvas.parentNode.removeChild(this.div);
 	document.removeEventListener('gametick', this.tickEventListener);
+	document.removeEventListener('keypress', this.keypressListener);
 };

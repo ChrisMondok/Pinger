@@ -23,6 +23,7 @@ Gold.prototype.collect = function() {
 };
 
 Gold.prototype.draw = function(ctx) {
+	return;
 	ctx.fillStyle = "#FFFF00";
 
 	ctx.beginPath();

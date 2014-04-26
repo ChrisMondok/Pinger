@@ -77,3 +77,11 @@ Player.prototype.clickHandler = function(e, x, y) {
 	if(Math.floor(x) == this.x || Math.floor(y) == this.y)
 		this.moveTo(Math.floor(x), Math.floor(y));
 };
+
+Player.prototype.keyHandler = function(e) {
+	if(this.x != this.targetX || this.y != this.targetY)
+		return;
+
+	if(e.key == 'Spacebar' || e.which == 32)
+		this.gameBoard.spawn(Pulse, this.x, this.y);
+}
