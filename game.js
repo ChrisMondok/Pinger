@@ -24,14 +24,20 @@ function init() {
 		frames = 0;
 	}, 1000);
 
+	startLevel(levels[0]);
+
+	makeLevelTable();
+}
+
+function startLevel(level) {
 	window.game = new GameBoard();
 
 	window.player = game.spawn(Player, Math.round(window.game.width/2), 0);
 
-	for(i = 0; i < 7; i++)
+	for(i = 0; i < level.goldCount; i++)
 		window.game.spawn(Gold, Math.floor(Math.random() * window.game.width), 1 + Math.floor(Math.random() * (window.game.height - 1)));
 
-	for(i = 0; i < 3; i++)
+	for(i = 0; i < level.waterCount; i++)
 		window.game.spawn(Water, Math.floor(Math.random() * window.game.width), 1 + Math.floor(Math.random() * (window.game.height - 1)));
 }
 

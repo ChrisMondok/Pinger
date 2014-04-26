@@ -11,7 +11,7 @@
 
 		this.div.appendChild(this.scoreboard);
 		this.div.appendChild(this.canvas);
-		document.body.appendChild(this.div);
+		document.getElementById('gameContainer').appendChild(this.div);
 	}
 
 	namespace.GameBoard = function(width, height) {
