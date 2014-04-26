@@ -19,7 +19,19 @@ function GameBoard(width, height) {
 	document.body.appendChild(this.canvas);
 
 	this.pawns = [];
+
+	this.dirt = [];
+	for(var x = 0; x < this.width; x++) {
+		var column = this.dirt[x] = [];
+		for (var y = 0; y < this.height; y++) {
+			column[y] = y > 0;
+		}
+	}
 }
+
+GameBoard.prototype.dig = function(x, y) {
+	this.dirt[x][y] = false;
+};
 
 GameBoard.prototype.clickHandler = function(e) {
 	var x = (e.clientX - this.canvas.offsetLeft) / GRIDSIZE;
@@ -83,7 +95,13 @@ GameBoard.prototype.drawGrid = function(ctx) {
 GameBoard.prototype.drawGround = function(ctx) {
 	ctx.fillStyle = "#6c513c";
 
-	ctx.fillRect(0, 1*GRIDSIZE, this.width * GRIDSIZE, (this.height - 1) * GRIDSIZE);
+	//ctx.fillRect(0, 1*GRIDSIZE, this.width * GRIDSIZE, (this.height - 1) * GRIDSIZE);
+	for(var y = 0; y < this.height; y++) {
+		for(var x = 0; x < this.width; x++) {
+			if(this.dirt[x][y])
+				ctx.fillRect(x * GRIDSIZE, y * GRIDSIZE, GRIDSIZE, GRIDSIZE);
+		}
+	}
 };
 
 GameBoard.prototype.destroy = function() {

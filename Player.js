@@ -27,6 +27,8 @@ Player.prototype.tick = function(e) {
 
 		this.x = Math.max(this.x - s, Math.min(this.x + s, this.targetX));
 		this.y = Math.max(this.y - s, Math.min(this.y + s, this.targetY));
+
+		this.gameBoard.dig(Math.floor(this.x), Math.floor(this.y));
 	}
 };
 

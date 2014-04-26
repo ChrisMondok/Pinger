@@ -4,17 +4,24 @@ var viewportHeight = 480;
 
 function init() {
 
+	var frames = 0;
 	var last = new Date().getTime();
 	setInterval(function() {
 		var now = new Date().getTime();
-
+	
 		var tickEvent = new CustomEvent('gametick');
 		tickEvent.dt = now - last;
 
 		document.dispatchEvent(tickEvent);
 
 		last = now;
+		frames++;
 	}, 1000/30);
+
+	setInterval(function() {
+		document.getElementById('fpsDisplay').value = frames;
+		frames = 0;
+	}, 1000);
 
 	window.game = new GameBoard();
 
