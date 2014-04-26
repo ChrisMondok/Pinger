@@ -1,6 +1,8 @@
-function Pawn(gameBoard) {
+function Pawn(gameBoard, x, y) {
 	this.gameBoard = gameBoard;
 	this.handlers = [];
+	this.x = x;
+	this.y = y;
 }
 
 Pawn.prototype.draw = function(ctx) {

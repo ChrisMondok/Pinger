@@ -10,7 +10,7 @@ function init() {
 		var now = new Date().getTime();
 	
 		var tickEvent = new CustomEvent('gametick');
-		tickEvent.dt = now - last;
+		tickEvent.dt = (now - last);
 
 		document.dispatchEvent(tickEvent);
 
@@ -25,7 +25,7 @@ function init() {
 
 	window.game = new GameBoard();
 
-	window.player = game.spawn(Player);
+	window.player = game.spawn(Player, 5, 0);
 }
 
 function usingState(ctx, fn, scope) {

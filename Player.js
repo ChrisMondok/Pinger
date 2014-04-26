@@ -1,7 +1,8 @@
-var Player = extend(Pawn);
-
-Player.prototype.targetX = Player.prototype.x = 5;
-Player.prototype.targetY = Player.prototype.y = 0;
+var Player = extend(Pawn, function() {
+	Pawn.apply(this, arguments);
+	this.targetX = this.x;
+	this.targetY = this.y;
+});
 
 Player.prototype.maxSpeed = 4;
 
@@ -48,15 +49,20 @@ Player.prototype.draw = function(ctx) {
 };
 
 Player.prototype.tick = function(e) {
-	if(this.x != this.targetX || this.y != this.targetY) {
-		var s = this.maxSpeed * e.dt/1000;
-
-		this.x = Math.max(this.x - s, Math.min(this.x + s, this.targetX));
-		this.y = Math.max(this.y - s, Math.min(this.y + s, this.targetY));
-
-		this.gameBoard.dig(Math.floor(this.x), Math.floor(this.y));
-	}
+	this.move(e);
 };
+
+Player.prototype.move = function(e) {
+	if(this.x == this.targetX && this.y == this.targetY)
+		return;
+
+	var s = this.maxSpeed * e.dt/1000;
+
+	this.x = Math.max(this.x - s, Math.min(this.x + s, this.targetX));
+	this.y = Math.max(this.y - s, Math.min(this.y + s, this.targetY));
+
+	this.gameBoard.dig(Math.round(this.x), Math.round(this.y));
+}
 
 Player.prototype.moveTo = function(x, y) {
 	console.log("Move to "+x+", "+y);

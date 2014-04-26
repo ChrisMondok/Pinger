@@ -1,36 +1,69 @@
-function GameBoard(width, height) {
-	
-	this.tickEventListener = this.tick.bind(this);
+(function(namespace) {
+	var makeDOM = function() {
+		this.div = document.createElement('div');
+		this.canvas = document.createElement('canvas');	
+		this.canvas.setAttribute('width', viewportWidth);
+		this.canvas.setAttribute('height', viewportHeight);
+		this.canvas.addEventListener('click', this.clickHandler.bind(this));
+		this.ctx = this.canvas.getContext('2d');
 
-	document.addEventListener('gametick', this.tickEventListener);
+		this.scoreboard = document.createElement('div');
 
-	this.width = width || 40;
-	this.height = height || 20;
-
-	this.viewportX = 0;
-	this.viewportY = 0;
-
-	this.canvas = document.createElement('canvas');	
-	this.canvas.setAttribute('width', viewportWidth);
-	this.canvas.setAttribute('height', viewportHeight);
-	this.canvas.addEventListener('click', this.clickHandler.bind(this));
-	this.ctx = this.canvas.getContext('2d');
-
-	document.body.appendChild(this.canvas);
-
-	this.pawns = [];
-
-	this.dirt = [];
-	for(var x = 0; x < this.width; x++) {
-		var column = this.dirt[x] = [];
-		for (var y = 0; y < this.height; y++) {
-			column[y] = y > 0;
-		}
+		this.div.appendChild(this.scoreboard);
+		this.div.appendChild(this.canvas);
+		document.body.appendChild(this.div);
 	}
-}
+
+	namespace.GameBoard = function(width, height) {
+		this.tickEventListener = this.tick.bind(this);
+
+		document.addEventListener('gametick', this.tickEventListener);
+
+		this.width = width || 40;
+		this.height = height || 20;
+
+		this.viewportX = 0;
+		this.viewportY = 0;
+
+		makeDOM.apply(this);
+
+		this.pawns = [];
+
+		this.dirt = [];
+		for(var x = 0; x < this.width; x++) {
+			var column = this.dirt[x] = [];
+			for (var y = 0; y < this.height; y++) {
+				column[y] = y > 0;
+			}
+		}
+
+		var score = 0;
+
+		Object.defineProperty(this, 'score', {
+			get: function() {return score;},
+			set: function(value) {
+				var oldScore = score;
+				score = value;
+				this.scoreChanged(oldScore);
+			}
+		});
+
+		this.scoreChanged(0);
+	};
+})(window);
+
+GameBoard.prototype.scoreChanged = function(oldScore) {
+	this.scoreboard.innerHTML = ["Score:",this.score,"points"].join(' ');
+};
 
 GameBoard.prototype.dig = function(x, y) {
 	this.dirt[x][y] = false;
+
+	this.getPawnsOfType(Gold).filter(function(gold) {
+		return gold.x == Math.round(x) && gold.y == Math.round(y);
+	}).forEach(function(gold) {
+		gold.collect();
+	});
 };
 
 GameBoard.prototype.clickHandler = function(e) {
@@ -44,8 +77,14 @@ GameBoard.prototype.clickHandler = function(e) {
 	}
 };
 
-GameBoard.prototype.spawn = function(cls) {
-	var pawn = new cls(this);
+GameBoard.prototype.getPawnsOfType = function(type) {
+	return this.pawns.filter(function(p) {
+		return p instanceof type;
+	});
+};
+
+GameBoard.prototype.spawn = function(cls, x, y) {
+	var pawn = new cls(this, x, y);
 	this.pawns.push(pawn);
 	return pawn;
 };
@@ -83,7 +122,7 @@ GameBoard.prototype.adjustViewport = function() {
 
 	this.viewportX = Math.min(Math.max(0, x), this.width * GRIDSIZE - viewportWidth);
 	this.viewportY = Math.min(Math.max(0, y), this.height * GRIDSIZE - viewportHeight);
-}
+};
 
 GameBoard.prototype.draw = function(ctx) {
 	usingState(ctx, function() {
@@ -128,6 +167,6 @@ GameBoard.prototype.drawGround = function(ctx) {
 };
 
 GameBoard.prototype.destroy = function() {
-	this.canvas.parentNode.removeChild(this.canvas);
+	this.canvas.parentNode.removeChild(this.div);
 	document.removeEventListener('gametick', this.tickEventListener);
 };
