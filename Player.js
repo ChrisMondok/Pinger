@@ -81,12 +81,12 @@ Player.prototype.move = function(e) {
 
 	if(this.x != oldX) {
 		for(i = Math.min(Math.round(this.x), oldX); i <= Math.max(Math.round(this.x), oldX); i++) {
-			this.gameBoard.dig(i, Math.round(this.y));
+			this.gameBoard.dig(this, i, Math.round(this.y));
 		}
 	}
 	if(this.y != oldY) {
 		for(i = Math.min(Math.round(this.y), oldY); i <= Math.max(Math.round(this.y), oldY); i++) {
-			this.gameBoard.dig(Math.round(this.x), i);
+			this.gameBoard.dig(this, Math.round(this.x), i);
 		}
 	}
 };
@@ -125,5 +125,5 @@ Player.prototype.clear = function() {
 
 Player.prototype.destroy = function() {
 	Pawn.prototype.destroy.apply(this, arguments);
-	this.pingButton.parentNode.removeChild(this.pingButton);
+	this.div.parentNode.removeChild(this.div);
 };

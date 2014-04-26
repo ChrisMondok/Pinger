@@ -25,6 +25,9 @@
 		this.width = width || 40;
 		this.height = height || 20;
 
+		this.waterLevel = this.height;
+		this.waterLevelTarget = this.height;
+
 		this.viewportX = 0;
 		this.viewportY = 0;
 
@@ -59,14 +62,17 @@
 
 GameBoard.prototype.backgroundColor = "#aad1f8";
 
+GameBoard.prototype.waterSpeed = 2;
+
 GameBoard.prototype.dugChanged = function() {
 	this.scoreboard.innerHTML = ["Dirt dug:",this.dug].join(' ');
 };
 
-GameBoard.prototype.dig = function(x, y) {
+GameBoard.prototype.dig = function(player, x, y) {
 	if(this.dirt[x][y]) {
 		this.dug++;
 		this.dirt[x][y] = false;
+		sounds.dirt.play(0.5);
 	}
 
 	this.getPawnsOfType(Gold).filter(function(gold) {
@@ -74,6 +80,14 @@ GameBoard.prototype.dig = function(x, y) {
 	}).forEach(function(gold) {
 		gold.collect();
 	});
+
+	if(this.getPawnsOfType(Water).some(function(w) {
+		return w.x == Math.round(x) && w.y == Math.round(y);
+	})) {
+		player.destroy();
+		this.flood(y);
+		sounds.lose.play();
+	}
 };
 
 GameBoard.prototype.clickHandler = function(e) {
@@ -117,6 +131,9 @@ GameBoard.prototype.removePawn = function(pawn) {
 
 GameBoard.prototype.tick = function(tickEvent) {
 	this.adjustViewport();
+	
+	this.waterLevel = Math.max(this.waterLevelTarget, this.waterLevel - tickEvent.dt / 1000 * this.waterSpeed);
+
 	for(var i = 0; i < this.pawns.length; i++)
 		this.pawns[i].tick(tickEvent);
 
@@ -138,12 +155,13 @@ GameBoard.prototype.adjustViewport = function() {
 		}
 	}
 
-	x = (x / playerCount + 0.5) * GRIDSIZE - viewportWidth / 2;
-	y = (y / playerCount + 0.5) * GRIDSIZE - viewportHeight / 2;
+	if(playerCount) {
+		x = (x / playerCount + 0.5) * GRIDSIZE - viewportWidth / 2;
+		y = (y / playerCount + 0.5) * GRIDSIZE - viewportHeight / 2;
 
-
-	this.viewportX = Math.min(Math.max(0, x), this.width * GRIDSIZE - viewportWidth);
-	this.viewportY = Math.min(Math.max(0, y), this.height * GRIDSIZE - viewportHeight);
+		this.viewportX = Math.min(Math.max(0, x), this.width * GRIDSIZE - viewportWidth);
+		this.viewportY = Math.min(Math.max(0, y), this.height * GRIDSIZE - viewportHeight);
+	}
 };
 
 GameBoard.prototype.draw = function(ctx) {
@@ -164,6 +182,10 @@ GameBoard.prototype.draw = function(ctx) {
 	}, this);
 
 	this.drawHud(ctx);
+};
+
+GameBoard.prototype.flood = function(y) {
+	this.waterLevelTarget = y;
 };
 
 GameBoard.prototype.drawHud = function(ctx) {
@@ -215,12 +237,16 @@ GameBoard.prototype.drawGrid = function(ctx) {
 GameBoard.prototype.drawGround = function(ctx) {
 
 	//ctx.fillRect(0, 1*GRIDSIZE, this.width * GRIDSIZE, (this.height - 1) * GRIDSIZE);
+	ctx.fillStyle = "#d8a278";
+	ctx.fillRect(this.viewportX, Math.max(this.viewportY, GRIDSIZE), viewportWidth, viewportHeight);
+
+	ctx.fillStyle = "#0069d5";
+	ctx.fillRect(this.viewportX, this.waterLevel * GRIDSIZE, viewportWidth, viewportHeight);
+
+	ctx.fillStyle = "#6c513c";
 	for(var y = 1; y < this.height; y++) {
 		for(var x = 0; x < this.width; x++) {
 			if(this.dirt[x][y])
-				ctx.fillStyle = "#6c513c";
-			else
-				ctx.fillStyle = "#d8a278";
 			ctx.fillRect(x * GRIDSIZE, y * GRIDSIZE, GRIDSIZE, GRIDSIZE);
 		}
 	}

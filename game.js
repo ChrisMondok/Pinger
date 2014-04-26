@@ -3,6 +3,7 @@ var viewportWidth = 640;
 var viewportHeight = 480;
 
 function init() {
+	var i;
 
 	var frames = 0;
 	var last = new Date().getTime();
@@ -27,11 +28,11 @@ function init() {
 
 	window.player = game.spawn(Player, Math.round(window.game.width/2), 0);
 
-	for(var i = 0; i < 7; i++)
+	for(i = 0; i < 7; i++)
 		window.game.spawn(Gold, Math.floor(Math.random() * window.game.width), 1 + Math.floor(Math.random() * (window.game.height - 1)));
 
-	for(var i = 0; i < 3; i++)
-		window.game.spawn(Water, Math.floor(Math.random() * window.game.width), Math.floor(Math.random() * window.game.height));
+	for(i = 0; i < 3; i++)
+		window.game.spawn(Water, Math.floor(Math.random() * window.game.width), 1 + Math.floor(Math.random() * (window.game.height - 1)));
 }
 
 function usingState(ctx, fn, scope) {
