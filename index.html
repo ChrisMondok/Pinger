@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>Pinger</title>
+		<link rel="stylesheet" href="style.css"/>
 		<script src="polyfills.js"></script>
 		<script src="Levels.js"></script>
 		<script src="LevelSelector.js"></script>
@@ -17,16 +18,20 @@
 		<script src="Remnant.js"></script>
 	</head>
 	<body>
-		<div>
-			<span id="frameRate"></span>FPS
-		</div>
 		<div id="menuContainer">
+			<div>Level Select</div>
 			<table>
-				<caption>Level Select</caption>
+				<thead>
+					<tr>
+						<td>Level</td>
+						<td>Best Score</td>
+					</tr>
+				</thead>
 			</table>
 		</div>
 		<div id="gameContainer">
-
+			<div> <span id="frameRate"></span>FPS </div>
+			<button id="quitButton">Quit</button>
 		</div>
 	</body>
 </html>

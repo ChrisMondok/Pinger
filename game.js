@@ -24,21 +24,36 @@ function init() {
 		frames = 0;
 	}, 1000);
 
-	startLevel(levels[0]);
-
 	makeLevelTable();
+
+	document.getElementById('quitButton').addEventListener('click', endLevel.bind(window, false));
 }
 
 function startLevel(level) {
-	window.game = new GameBoard();
+
+	document.body.className = "playing";
+
+	var game = window.game = new GameBoard(level.width, level.height);
 
 	window.player = game.spawn(Player, Math.round(window.game.width/2), 0);
 
-	for(i = 0; i < level.goldCount; i++)
-		window.game.spawn(Gold, Math.floor(Math.random() * window.game.width), 1 + Math.floor(Math.random() * (window.game.height - 1)));
+	for(i = 0; i < level.goldCount; i++) {
+		var coords = level.goldPlacementFunction(game);
+		game.spawn(Gold, coords[0], coords[1]);
+	}
 
 	for(i = 0; i < level.waterCount; i++)
-		window.game.spawn(Water, Math.floor(Math.random() * window.game.width), 1 + Math.floor(Math.random() * (window.game.height - 1)));
+		game.spawn(Water, Math.floor(Math.random() * window.game.width), 1 + Math.floor(Math.random() * (window.game.height - 1)));
+}
+
+function endLevel(won) {
+	if(won) {
+		debugger;
+	}
+
+	window.game.destroy();
+
+	document.body.className = "";
 }
 
 function usingState(ctx, fn, scope) {

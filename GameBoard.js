@@ -22,8 +22,8 @@
 
 		document.addEventListener('keypress', this.keypressListener);
 
-		this.width = width || 40;
-		this.height = height || 20;
+		this.width = width;
+		this.height = height;
 
 		this.waterLevel = this.height;
 		this.waterLevelTarget = this.height;
@@ -226,7 +226,7 @@ GameBoard.prototype.drawGrid = function(ctx) {
 		ctx.moveTo(x * GRIDSIZE, 0);
 		ctx.lineTo(x * GRIDSIZE, this.height * GRIDSIZE);
 	}
-	for(var y = 0; y < this.width; y += 1) {
+	for(var y = 0; y < this.height; y += 1) {
 		ctx.moveTo(0, y * GRIDSIZE);
 		ctx.lineTo(this.width * GRIDSIZE, y * GRIDSIZE);
 	}
@@ -253,7 +253,7 @@ GameBoard.prototype.drawGround = function(ctx) {
 };
 
 GameBoard.prototype.destroy = function() {
-	this.canvas.parentNode.removeChild(this.div);
+	this.div.parentNode.removeChild(this.div);
 	document.removeEventListener('gametick', this.tickEventListener);
 	document.removeEventListener('keypress', this.keypressListener);
 };
