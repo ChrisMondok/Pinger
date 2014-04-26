@@ -17,8 +17,8 @@ Object.defineProperty(Gold.prototype, 'centerY', {
 Gold.prototype.radius = 4;
 
 Gold.prototype.collect = function() {
-	//play a sound
 	this.gameBoard.score += 5;
+	sounds.get.play();
 	this.destroy();
 };
 

@@ -1,5 +1,6 @@
 var Pulse = extend(Ring, function() {
 	Ring.apply(this, arguments);
+	sounds.ping.play();
 	this.gold = this.gameBoard.getPawnsOfType(Gold);
 });
 
@@ -20,6 +21,7 @@ Pulse.prototype.tick = function(e) {
 			ring.radius = this.pixelDistanceTo(g);
 			ring.color = "gold";
 			toRemove.push(g);
+			sounds.found.play();
 		}
 	}
 
