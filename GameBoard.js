@@ -1,4 +1,4 @@
-var PARALLAX = 0.0;
+var PARALLAX = 0.05;
 (function(namespace) {
 	var makeDOM = function() {
 		this.div = document.createElement('div');
@@ -205,7 +205,7 @@ GameBoard.prototype.draw = function(ctx) {
 
 		//draw sky
 		ctx.fillStyle = this.backgroundColor;
-		ctx.fillRect(0, 0, viewportWidth, -Math.min(this.viewportY, 0) + GRIDSIZE);
+		ctx.fillRect(0, 0, viewportWidth, Math.max(-this.viewportY, 0) + GRIDSIZE);
 
 		ctx.translate(-this.viewportX, -this.viewportY);
 
@@ -229,12 +229,24 @@ GameBoard.prototype.drawHud = function(ctx) {
 	var goldRemaining = this.getPawnsOfType(Gold).length;
 
 	ctx.strokeStyle = "gold";
-	ctx.beginPath();
+	ctx.fillStyle = "rgba(0,0,0,0.5)";
 	ctx.lineWidth = 5;
+
+	ctx.beginPath();
 	ctx.arc(
 		viewportWidth - 48,
 		48,
 		32,
+		0,
+		2*Math.PI,
+		false
+	);
+	ctx.fill();
+	ctx.beginPath();
+	ctx.arc(
+		viewportWidth - 48,
+		48,
+		36,
 		0,
 		2*Math.PI * ((this.goldCount - goldRemaining) / this.goldCount),
 		false
@@ -246,8 +258,6 @@ GameBoard.prototype.drawHud = function(ctx) {
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle";
 		ctx.fillStyle = "gold";
-		ctx.shadowBlur = 5;
-		ctx.shadowColor = 'black';
 		ctx.font = "28px sans-serif";
 		ctx.fillText(this.goldCount - goldRemaining, viewportWidth-48, 32);
 		ctx.font = "20px sans-serif";
@@ -291,10 +301,10 @@ GameBoard.prototype.drawGround = function(ctx) {
 	ctx.fillRect(Math.max(this.viewportX, 0), Math.max(this.viewportY, this.waterLevel * GRIDSIZE), Math.min(viewportWidth, this.width * GRIDSIZE), viewportHeight);
 
 	//get bounds in XY
-	var left = Math.floor(this.viewportX / GRIDSIZE);
-	var top = Math.floor(this.viewportY / GRIDSIZE);
-	var right = Math.ceil(this.viewportX / GRIDSIZE + viewportWidth/GRIDSIZE);
-	var bottom = Math.ceil(this.viewportY / GRIDSIZE + viewportHeight/GRIDSIZE);
+	var left = Math.max(0, Math.floor(this.viewportX / GRIDSIZE));
+	var top = Math.max(0, Math.floor(this.viewportY / GRIDSIZE));
+	var right = Math.min(this.width, Math.ceil(this.viewportX / GRIDSIZE + viewportWidth/GRIDSIZE));
+	var bottom = Math.min(this.height, Math.ceil(this.viewportY / GRIDSIZE + viewportHeight/GRIDSIZE));
 
 	//draw ground tiles
 	ctx.fillStyle = "#6c513c";
