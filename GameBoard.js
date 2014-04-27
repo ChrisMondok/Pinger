@@ -104,6 +104,9 @@ GameBoard.prototype.clickHandler = function(e) {
 	var x = (e.clientX - this.canvas.offsetLeft + this.viewportX) / GRIDSIZE;
 	var y = (e.clientY - this.canvas.offsetTop + this.viewportY) / GRIDSIZE;
 
+	if(x < 0 || y < 0 || x > this.width || y > this.height)
+		return;
+
 	for(var i = 0; i < this.pawns.length; i++) {
 		if('clickHandler' in this.pawns[i])
 			this.pawns[i].clickHandler(e, x, y);
@@ -168,11 +171,15 @@ GameBoard.prototype.adjustViewport = function() {
 		x = (x / playerCount + 0.5) * GRIDSIZE - viewportWidth / 2;
 		y = (y / playerCount + 0.5) * GRIDSIZE - viewportHeight / 2;
 
-		if(viewportWidth < this.width)
+		if(viewportWidth <= this.width * GRIDSIZE)
 			this.viewportX = Math.min(Math.max(0, x), this.width * GRIDSIZE - viewportWidth);
 		else
-			this.viewportX = x;
-		this.viewportY = Math.min(Math.max(0, y), this.height * GRIDSIZE - viewportHeight);
+			this.viewportX = this.width * GRIDSIZE / 2 - viewportWidth / 2
+
+		if(viewportHeight <= this.height * GRIDSIZE)
+			this.viewportY = Math.min(Math.max(0, y), this.height * GRIDSIZE - viewportHeight);
+		else
+			this.viewportY = this.height * GRIDSIZE / 2 - viewportHeight / 2
 	}
 };
 
