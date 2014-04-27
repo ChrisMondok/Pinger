@@ -13,7 +13,7 @@ var PARALLAX = 0.05;
 		this.div.appendChild(this.scoreboard);
 		this.div.appendChild(this.canvas);
 		document.getElementById('gameContainer').appendChild(this.div);
-	}
+	};
 
 	namespace.GameBoard = function(level) {
 		this.tickEventListener = this.tick.bind(this);
@@ -211,8 +211,10 @@ GameBoard.prototype.draw = function(ctx) {
 		ctx.fillRect(0, 0, viewportWidth, viewportHeight);
 
 		//draw sky
-		ctx.fillStyle = this.backgroundColor;
-		ctx.fillRect(0, 0, viewportWidth, Math.max(-this.viewportY, 0) + GRIDSIZE);
+		if(this.viewportY < GRIDSIZE) {
+			ctx.fillStyle = this.backgroundColor;
+			ctx.fillRect(0, 0, viewportWidth, GRIDSIZE - this.viewportY);
+		}
 
 		ctx.translate(-this.viewportX, -this.viewportY);
 
@@ -270,7 +272,7 @@ GameBoard.prototype.drawHud = function(ctx) {
 		ctx.font = "20px sans-serif";
 		ctx.fillText(this.goldCount, viewportWidth-48, 66);
 	}, this);
-}
+};
 
 GameBoard.prototype.drawGrid = function(ctx) {
 	ctx.strokeStyle = "rgba(0,0,0,0.25)";
