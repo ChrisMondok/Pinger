@@ -107,7 +107,7 @@ GameBoard.prototype.dig = function(player, x, y) {
 	})) {
 		player.destroy();
 		this.flood(y);
-		sounds.lose.play();
+		sounds.lose.play(0.25);
 		this.reveal = true;
 	}
 };
