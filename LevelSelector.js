@@ -14,6 +14,11 @@ function makeLevelTable() {
 	for(i = 0; i < levels.length; i++) {
 		var level = levels[i];
 		var row = document.createElement('tr');
+
+		var levelNumber = document.createElement('td');
+		levelNumber.innerHTML = i + 1;
+		row.appendChild(levelNumber)
+
 		var levelName = document.createElement('td');
 		row.appendChild(levelName);
 

@@ -66,6 +66,7 @@ var PARALLAX = 0.05;
 		this.dugChanged(0);
 
 		this.lost = false;
+		this.reveal = false;
 
 	};
 })(window);
@@ -105,6 +106,7 @@ GameBoard.prototype.dig = function(player, x, y) {
 		player.destroy();
 		this.flood(y);
 		sounds.lose.play();
+		this.reveal = true;
 	}
 };
 

@@ -26,9 +26,10 @@ Gold.prototype.collect = function() {
 };
 
 Gold.prototype.draw = function(ctx) {
-	return;
-	ctx.fillStyle = "red";
+	if(!this.gameBoard.reveal)
+		return;
 
+	ctx.fillStyle = "gold";
 	ctx.beginPath();
 	ctx.arc(
 		this.centerX,
