@@ -1,10 +1,9 @@
 function Sound(urls){
 	this.loaded = 0;
 	this.urls = urls;
+	var self = this;
 	this.urls.forEach(function(u) {
-		new Audio(u).addEventListener('canplaythrough', function() {
-			this.loaded += 1/urls.length;
-		});
+		var a = new Audio(u);
 	});
 }
 
