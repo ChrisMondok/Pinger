@@ -110,8 +110,8 @@ GameBoard.prototype.dig = function(player, x, y) {
 
 GameBoard.prototype.clickHandler = function(e) {
 	//these are grid coordinates, not pixel coordinates
-	var x = (e.clientX - this.canvas.offsetLeft + this.viewportX) / GRIDSIZE;
-	var y = (e.clientY - this.canvas.offsetTop + this.viewportY) / GRIDSIZE;
+	var x = (e.pageX - this.canvas.offsetLeft + this.viewportX) / GRIDSIZE;
+	var y = (e.pageY - this.canvas.offsetTop + this.viewportY) / GRIDSIZE;
 
 	if(x < 0 || y < 0 || x > this.width || y > this.height)
 		return;
