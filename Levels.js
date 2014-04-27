@@ -50,16 +50,16 @@ var levels = [
 		waterPlacementFunction: placementFunctions.random
 	},
 	{
-		name: 'Lots of Gold',
-		goldCount: 7,
-		waterCount: 3,
+		name: 'Level Four',
+		goldCount: 4,
+		waterCount: 2,
 		width: 40,
 		height: 40,
 		goldPlacementFunction: placementFunctions.random,
 		waterPlacementFunction: placementFunctions.random
 	},
 	{
-		name: 'Level Five',
+		name: 'Lots of Gold',
 		goldCount: 7,
 		waterCount: 3,
 		width: 40,

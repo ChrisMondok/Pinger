@@ -45,6 +45,8 @@ function makeLevelTable() {
 		var finalRow = document.createElement('tr');
 		var l = document.createElement('td');
 		l.innerHTML = 'Total';
+
+		finalRow.appendChild(document.createElement('td'));
 		finalRow.appendChild(l);
 
 		var r = document.createElement('td');

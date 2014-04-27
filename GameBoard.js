@@ -82,6 +82,8 @@ GameBoard.prototype.dugChanged = function() {
 GameBoard.prototype.dig = function(player, x, y) {
 	if(this.dirt[x][y] !== false) {
 		this.dug++;
+		var particle = this.spawn(Dirt, x, y, true);
+		particle.image = this.dirtImages[this.dirt[x][y]];
 		this.dirt[x][y] = false;
 		sounds.dirt.play(0.5);
 	}
@@ -140,11 +142,14 @@ GameBoard.prototype.getPawnsOfType = function(type) {
 	});
 };
 
-GameBoard.prototype.spawn = function(cls, x, y) {
+GameBoard.prototype.spawn = function(cls, x, y, before) {
 	if(cls == Gold)
 		this.goldCount ++;
 	var pawn = new cls(this, x, y);
-	this.pawns.push(pawn);
+	if(before)
+		this.pawns.unshift(pawn);
+	else
+		this.pawns.push(pawn);
 	return pawn;
 };
 
