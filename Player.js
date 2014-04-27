@@ -18,6 +18,10 @@ var Player = extend(Pawn, function() {
 	this.gameBoard.div.appendChild(this.div);
 });
 
+Object.defineProperty(Player.prototype, 'moving', {
+	get: function() {return this.x != this.targetX || this.y != this.targetY;}
+});
+
 Player.prototype.maxSpeed = 4;
 
 Player.prototype.draw = function(ctx) {
@@ -35,7 +39,7 @@ Player.prototype.draw = function(ctx) {
 	);
 	ctx.fill();
 
-	if(this.x != this.targetX || this.y != this.targetY) {
+	if(this.moving) {
 		ctx.strokeStyle = "#000";
 		var w = 3;
 		ctx.lineWidth = w;
@@ -97,7 +101,7 @@ Player.prototype.moveTo = function(x, y) {
 };
 
 Player.prototype.clickHandler = function(e, x, y) {
-	if(this.x != this.targetX || this.y != this.targetY)
+	if(this.moving)
 		return;
 
 	if(Math.floor(x) == this.x || Math.floor(y) == this.y)
@@ -105,7 +109,7 @@ Player.prototype.clickHandler = function(e, x, y) {
 };
 
 Player.prototype.keyHandler = function(e) {
-	if(this.x != this.targetX || this.y != this.targetY)
+	if(this.moving)
 		return;
 
 	if(e.key == 'Spacebar' || e.which == 32)
@@ -116,7 +120,8 @@ Player.prototype.keyHandler = function(e) {
 };
 
 Player.prototype.ping = function() {
-	this.gameBoard.spawn(Pulse, this.x, this.y);
+	if(!this.moving)
+		this.gameBoard.spawn(Pulse, this.x, this.y);
 };
 
 Player.prototype.clear = function() {
