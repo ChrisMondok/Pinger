@@ -1,6 +1,6 @@
 var Nope = extend(Particle, function() {
 	Particle.apply(this, arguments);
-	sounds.nope.play(0.5);
+	sounds.nope.play(0.05);
 });
 
 Nope.prototype.ttl = 1;
