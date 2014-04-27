@@ -187,12 +187,12 @@ GameBoard.prototype.adjustViewport = function() {
 		if(viewportWidth <= this.width * GRIDSIZE)
 			this.viewportX = Math.min(Math.max(0, x), this.width * GRIDSIZE - viewportWidth);
 		else
-			this.viewportX = this.width * GRIDSIZE / 2 - viewportWidth / 2
+			this.viewportX = this.width * GRIDSIZE / 2 - viewportWidth / 2;
 
 		if(viewportHeight <= this.height * GRIDSIZE)
 			this.viewportY = Math.min(Math.max(0, y), this.height * GRIDSIZE - viewportHeight);
 		else
-			this.viewportY = this.height * GRIDSIZE / 2 - viewportHeight / 2
+			this.viewportY = this.height * GRIDSIZE / 2 - viewportHeight / 2;
 	}
 };
 
@@ -290,13 +290,21 @@ GameBoard.prototype.drawGround = function(ctx) {
 	ctx.fillStyle = "#0069d5";
 	ctx.fillRect(Math.max(this.viewportX, 0), Math.max(this.viewportY, this.waterLevel * GRIDSIZE), Math.min(viewportWidth, this.width * GRIDSIZE), viewportHeight);
 
+	//get bounds in XY
+	var left = Math.floor(this.viewportX / GRIDSIZE);
+	var top = Math.floor(this.viewportY / GRIDSIZE);
+	var right = Math.ceil(this.viewportX / GRIDSIZE + viewportWidth/GRIDSIZE);
+	var bottom = Math.ceil(this.viewportY / GRIDSIZE + viewportHeight/GRIDSIZE);
+
 	//draw ground tiles
 	ctx.fillStyle = "#6c513c";
-	for(var y = 1; y < this.height; y++) {
-		for(var x = 0; x < this.width; x++) {
-			if(this.dirt[x][y] !== false)
-			ctx.drawImage(this.dirtImages[this.dirt[x][y]], x * GRIDSIZE, y* GRIDSIZE);
-			//ctx.fillRect(x * GRIDSIZE, y * GRIDSIZE, GRIDSIZE, GRIDSIZE);
+	var dirtDrawn = 0;
+	for(var y = top || 1; y < bottom; y++) {
+		for(var x = left; x < right; x++) {
+			if(this.dirt[x][y] !== false) {
+				ctx.drawImage(this.dirtImages[this.dirt[x][y]], x * GRIDSIZE, y* GRIDSIZE);
+				dirtDrawn++;
+			}
 		}
 	}
 };
