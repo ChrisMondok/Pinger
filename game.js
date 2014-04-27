@@ -37,13 +37,21 @@ function startLevel(level) {
 
 	window.player = game.spawn(Player, Math.round(window.game.width/2), 0);
 
+	var gold = [];
 	for(i = 0; i < level.goldCount; i++) {
-		var coords = level.goldPlacementFunction(game);
-		game.spawn(Gold, coords[0], coords[1]);
+		var goldCoords = level.goldPlacementFunction(game);
+		gold.push(game.spawn(Gold, goldCoords[0], goldCoords[1]));
 	}
 
-	for(i = 0; i < level.waterCount; i++)
-		game.spawn(Water, Math.floor(Math.random() * window.game.width), 1 + Math.floor(Math.random() * (window.game.height - 1)));
+	for(i = 0; i < level.waterCount; i++) {
+		var waterCoords;
+		do {
+			waterCoords = level.goldPlacementFunction(game);
+			debugger;
+		} while (gold.some(function(g) {return g.x == waterCoords[0] && g.y == waterCoords[1];}))
+
+		game.spawn(Water, coords[0], coords[1]);
+	}
 }
 
 function endLevel(won) {
