@@ -1,4 +1,4 @@
-var Ring = extend(Pawn, function() {
+var Ring = extend(Particle, function() {
 	Pawn.apply(this, arguments);
 	this.radius = 0;
 });
@@ -24,10 +24,3 @@ Ring.prototype.draw = function(ctx) {
 		ctx.stroke();
 	}, this);
 };
-
-Ring.prototype.tick = function(e) {
-	Pawn.prototype.tick.apply(this, arguments);
-	this.ttl -= e.dt / 1000;
-	if(this.ttl <= 0)
-		this.destroy();
-}

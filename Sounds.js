@@ -21,6 +21,7 @@ window.sounds = {
 	found: new Sound(["sounds/found.wav"]),
 	win: new Sound(["sounds/win.wav"]),
 	lose: new Sound(["sounds/lose.wav"]),
+	nope: new Sound(["sounds/nope.wav"]),
 	dirt: new Sound([
 		"sounds/dirt0.wav",
 		"sounds/dirt1.wav",

@@ -106,6 +106,8 @@ Player.prototype.clickHandler = function(e, x, y) {
 
 	if(Math.floor(x) == this.x || Math.floor(y) == this.y)
 		this.moveTo(Math.floor(x), Math.floor(y));
+	else
+		this.gameBoard.spawn(Nope, this.x, this.y);
 };
 
 Player.prototype.keyHandler = function(e) {
