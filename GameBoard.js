@@ -14,7 +14,7 @@
 		document.getElementById('gameContainer').appendChild(this.div);
 	}
 
-	namespace.GameBoard = function(width, height) {
+	namespace.GameBoard = function(level) {
 		this.tickEventListener = this.tick.bind(this);
 		this.keypressListener = this.keyHandler.bind(this);
 
@@ -22,8 +22,9 @@
 
 		document.addEventListener('keypress', this.keypressListener);
 
-		this.width = width;
-		this.height = height;
+		this.level = level;
+		this.width = level.width;
+		this.height = level.height;
 
 		this.waterLevel = this.height;
 		this.waterLevelTarget = this.height;
@@ -75,11 +76,19 @@ GameBoard.prototype.dig = function(player, x, y) {
 		sounds.dirt.play(0.5);
 	}
 
+	var got = false;
 	this.getPawnsOfType(Gold).filter(function(gold) {
 		return gold.x == Math.round(x) && gold.y == Math.round(y);
 	}).forEach(function(gold) {
 		gold.collect();
+		got = true;
 	});
+
+	if(got && !(this.getPawnsOfType(Gold).length)) {
+		player.destroy();
+		setTimeout(endLevel.bind(window, true), 2000);
+		sounds.win.play();
+	}
 
 	if(this.getPawnsOfType(Water).some(function(w) {
 		return w.x == Math.round(x) && w.y == Math.round(y);
@@ -159,7 +168,10 @@ GameBoard.prototype.adjustViewport = function() {
 		x = (x / playerCount + 0.5) * GRIDSIZE - viewportWidth / 2;
 		y = (y / playerCount + 0.5) * GRIDSIZE - viewportHeight / 2;
 
-		this.viewportX = Math.min(Math.max(0, x), this.width * GRIDSIZE - viewportWidth);
+		if(viewportWidth < this.width)
+			this.viewportX = Math.min(Math.max(0, x), this.width * GRIDSIZE - viewportWidth);
+		else
+			this.viewportX = x;
 		this.viewportY = Math.min(Math.max(0, y), this.height * GRIDSIZE - viewportHeight);
 	}
 };
@@ -167,7 +179,8 @@ GameBoard.prototype.adjustViewport = function() {
 GameBoard.prototype.draw = function(ctx) {
 	usingState(ctx, function() {
 		ctx.clearRect(0, 0, viewportWidth, viewportHeight);
-		ctx.fillStyle = this.backgroundColor;
+
+		ctx.fillStyle = "#000";
 		ctx.fillRect(0, 0, viewportWidth, viewportHeight);
 
 		ctx.translate(-this.viewportX, -this.viewportY);
@@ -236,13 +249,19 @@ GameBoard.prototype.drawGrid = function(ctx) {
 
 GameBoard.prototype.drawGround = function(ctx) {
 
-	//ctx.fillRect(0, 1*GRIDSIZE, this.width * GRIDSIZE, (this.height - 1) * GRIDSIZE);
+	//draw sky
+	ctx.fillStyle = this.backgroundColor;
+	ctx.fillRect(Math.max(this.viewportX, 0), 0, Math.min(viewportWidth, this.width * GRIDSIZE), GRIDSIZE);
+
+	//draw light brown
 	ctx.fillStyle = "#d8a278";
-	ctx.fillRect(this.viewportX, Math.max(this.viewportY, GRIDSIZE), viewportWidth, viewportHeight);
+	ctx.fillRect(Math.max(this.viewportX, 0), Math.max(this.viewportY, GRIDSIZE), Math.min(viewportWidth, this.width * GRIDSIZE), viewportHeight);
 
+	//draw water
 	ctx.fillStyle = "#0069d5";
-	ctx.fillRect(this.viewportX, this.waterLevel * GRIDSIZE, viewportWidth, viewportHeight);
+	ctx.fillRect(Math.max(this.viewportX, 0), Math.max(this.viewportY, this.waterLevel * GRIDSIZE), Math.min(viewportWidth, this.width * GRIDSIZE), viewportHeight);
 
+	//draw ground tiles
 	ctx.fillStyle = "#6c513c";
 	for(var y = 1; y < this.height; y++) {
 		for(var x = 0; x < this.width; x++) {

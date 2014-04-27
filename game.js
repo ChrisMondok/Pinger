@@ -33,7 +33,7 @@ function startLevel(level) {
 
 	document.body.className = "playing";
 
-	var game = window.game = new GameBoard(level.width, level.height);
+	var game = window.game = new GameBoard(level);
 
 	window.player = game.spawn(Player, Math.round(window.game.width/2), 0);
 
@@ -48,7 +48,13 @@ function startLevel(level) {
 
 function endLevel(won) {
 	if(won) {
-		debugger;
+		var scores = JSON.parse(localStorage.getItem('scores')) || {};
+		var score = scores[game.level.name] || Infinity;
+		if(game.dug < score) {
+			scores[game.level.name] = game.dug;
+			localStorage.setItem('scores', JSON.stringify(scores));
+			makeLevelTable();
+		}
 	}
 
 	window.game.destroy();

@@ -1,25 +1,51 @@
 function makeLevelTable() {
-	var table = document.getElementsByTagName('table')[0];
+	var i;
 
-	var scores = JSON.parse(localStorage.getItem('scores')) || [];
+	var tbody = document.getElementsByTagName('tbody')[0];
 
-	for(var i = 0; i < levels.length; i++) {
+	while(tbody.firstChild)
+		tbody.removeChild(tbody.firstChild);
+
+	var scores = JSON.parse(localStorage.getItem('scores')) || {};
+
+	var locked = false;
+	var total = 0;
+
+	for(i = 0; i < levels.length; i++) {
 		var level = levels[i];
 		var row = document.createElement('tr');
 		var levelName = document.createElement('td');
 		row.appendChild(levelName);
 
 		var btn = document.createElement('button');
+		btn.disabled = locked;
 		btn.innerHTML = level.name;
 		btn.addEventListener('click', startLevel.bind(window, level));
 
 		levelName.appendChild(btn);
 
 		var scoreCell = document.createElement('td');
-		scoreCell.innerHTML = scores[i] || '';
+		var score = scores[level.name] || null;
+		scoreCell.innerHTML = score || '';
+		if(score === null)
+			locked = true;
+		else
+			total += score;
 		row.appendChild(scoreCell);
 
-		table.appendChild(row);
+		tbody.appendChild(row);
+	}
 
+	if(!locked) {
+		var finalRow = document.createElement('tr');
+		var l = document.createElement('td');
+		l.innerHTML = 'Total';
+		finalRow.appendChild(l);
+
+		var r = document.createElement('td');
+		r.innerHTML = total;
+		finalRow.appendChild(r);
+
+		tbody.appendChild(finalRow);
 	}
 }

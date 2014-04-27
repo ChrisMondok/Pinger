@@ -19,6 +19,7 @@ window.sounds = {
 	get: new Sound(["sounds/get.wav"]),
 	ping: new Sound(["sounds/ping.wav"]),
 	found: new Sound(["sounds/found.wav"]),
+	win: new Sound(["sounds/win.wav"]),
 	lose: new Sound(["sounds/lose.wav"]),
 	dirt: new Sound([
 		"sounds/dirt0.wav",

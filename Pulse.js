@@ -24,7 +24,7 @@ Pulse.prototype.tick = function(e) {
 			else if(item instanceof Water)
 				ring.color = "blue";
 			toRemove.push(item);
-			sounds.found.play(this.ttl / Pulse.prototype.ttl);
+			sounds.found.play(Math.max(0, this.ttl / Pulse.prototype.ttl));
 		}
 	}
 
