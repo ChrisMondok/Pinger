@@ -58,6 +58,8 @@
 		});
 
 		this.dugChanged(0);
+
+		this.lost = false;
 	};
 })(window);
 
@@ -145,6 +147,10 @@ GameBoard.prototype.tick = function(tickEvent) {
 	this.adjustViewport();
 	
 	this.waterLevel = Math.max(this.waterLevelTarget, this.waterLevel - tickEvent.dt / 1000 * this.waterSpeed);
+	if(!this.lost && this.waterLevel == this.waterLevelTarget && this.waterLevelTarget < this.height) {
+		this.lost = true;
+		setTimeout(endLevel.bind(window, false), 1000);
+	}
 
 	for(var i = 0; i < this.pawns.length; i++)
 		this.pawns[i].tick(tickEvent);
