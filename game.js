@@ -46,7 +46,7 @@ function startLevel(level) {
 	for(i = 0; i < level.waterCount; i++) {
 		var waterCoords;
 		do
-			waterCoords = level.goldPlacementFunction(game);
+			waterCoords = level.waterPlacementFunction(game);
 		while (gold.some(function(g) {return g.x == waterCoords[0] && g.y == waterCoords[1];}))
 
 		game.spawn(Water, waterCoords[0], waterCoords[1]);
