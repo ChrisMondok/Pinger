@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+	<head>
+		<title>How to play Pinger</title>
+		<link rel="stylesheet" href="help.css"/>
+	</head>
+	<body>
+		<section>
+			<header>Prefix</header>
+			Pinger was written for
+			<a href="http://www.ludumdare.com/compo/2014/04/23/welcome-to-ludum-dare-29er/">Ludum Dare 29</a>.
+			Ludum Dare is a 48 hour game development competition where entrants are not permitted to work in teams, or use prior assets. There is also a Jam, which has less stringent rules.
+			Ludum Dare 29's theme was <q>Beneath The Surface</q>
+		</section>
+
+		<section>
+			<header>About Pinger</header>
+			In Pinger, the player must mine all of the underground gold without
+			running into water. The player uses sonar to locate items underground.
+
+			<p>
+			In Figure 1, there is gold three blocks away from the player.
+			The player has deployed one pulse. The gold circle shows the distance to the gold.
+			</p>
+
+			<p>
+			In order to triangulate the gold, the player needs to deploy more pulses.
+			In figure two, two pulses have been deployed. By looking at the points where the arcs
+			intersect, we can tell that the gold piece is either two blocks to the left and one block below,
+			or two blocks to the right of the player. By deploying a third pulse,
+			the player has located the gold in Figure 3. (Red circle added for clarity).
+			</p>
+
+			<figure>
+				<img src="screenshots/0.png" alt="Screenshot"/>
+				<figcaption>Figure 1</figcaption>
+			</figure>
+			<figure>
+				<img src="screenshots/1.png" alt="Screenshot"/>
+				<figcaption>Figure 2</figcaption>
+			</figure>
+			<figure>
+				<img src="screenshots/2.png" alt="Screenshot"/>
+				<figcaption>Figure 3</figcaption>
+			</figure>
+		</section>
+
+		<section>
+			<header>Gameplay Video</header>
+			<video controls>
+				<source src="videos/video.webm" type="video/webm"></source>
+				<source src="videos/video.ogg" type="video/ogg"></source>
+				<source src="videos/video.mp4" type="video/mp4"></source>
+				There should be a video here.
+			</video>
+		</section>
+
+		<section>
+			<header>How to play</header>
+
+			<p>
+				<em>Movement</em>
+				<br/>
+				The player can only move vertically or horizontally.
+				To move, click on any square that is in the same row or column as the player.
+			</p>
+			<p>
+				<em>Pulses</em>
+				<br/>
+				Press the <kbd>spacebar</kbd>, or click the "Pulse" button, to deploy a pulse.
+				Pulses last for about two seconds. When the pulse travels over gold, a gold ring is placed.
+				When the pulse travels over water, a blue ring is placed.
+				These rings last for about fifteen seconds each. There is no limit to the number of pulses you create.
+				If your screen becomes too busy, you can press <kbd>c</kbd> or click "Clear".
+			</p>
+
+			<p>
+				<em>Objective</em>
+				<br/>
+				The object of the game is to uncover all of the gold while digging up as little dirt as possible.
+				There is no limit to the number of sonar pulses you can use, and there is no cost to retracing your steps.
+			</p>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Pinger</title>
+		<link rel="stylesheet" href="style.css"/>
+		<script src="polyfills.js"></script>
+		<script src="Levels.js"></script>
+		<script src="LevelSelector.js"></script>
+		<script src="game.js"></script>
+		<script src="Sounds.js"></script>
+		<script src="GameBoard.js"></script>
+		<script src="Pawn.js"></script>
+		<script src="Player.js"></script>
+		<script src="Particle.js"></script>
+		<script src="Dirt.js"></script>
+		<script src="Nope.js"></script>
+		<script src="Ring.js"></script>
+		<script src="Pulse.js"></script>
+		<script src="Water.js"></script>
+		<script src="Gold.js"></script>
+		<script src="Remnant.js"></script>
+	</head>
+	<body>
+		<div style="display:none">
+			<img class="dirt-image" src="images/dirt0.png"/>
+			<img class="dirt-image" src="images/dirt1.png"/>
+			<img class="dirt-image" src="images/dirt2.png"/>
+			<img class="dirt-image" src="images/dirt3.png"/>
+			<img class="dirt-image" src="images/dirt4.png"/>
+			<img id="player-right" src="images/player-right.png"/>
+			<img id="player-left" src="images/player-left.png"/>
+			<img id="player-down" src="images/player-down.png"/>
+			<img id="player-up" src="images/player-up.png"/>
+			<img id="undirt" src="images/undirt.png"/>
+		</div>
+		<div id="menuContainer">
+			<a href="help.html">Help</a>
+			<div>Level Select</div>
+			<table>
+				<thead>
+					<tr>
+						<td>#</td>
+						<td>Level</td>
+						<td>Best Score</td>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+		<div id="gameContainer">
+			<div> <span id="frameRate"></span>FPS </div>
+			<button id="quitButton">Quit</button>
+		</div>
+	</body>
+</html>

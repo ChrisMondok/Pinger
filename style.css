@@ -1,0 +1,27 @@
+#gameContainer {
+	display: none;
+}
+
+.playing #menuContainer {
+	display: none;
+}
+
+.playing #gameContainer {
+	display: block;
+}
+
+table {
+	border: 1px solid black;
+	width: 400px;
+	border-collapse: collapse;
+}
+
+td {
+	text-align: center;
+	border: 1px solid black;
+	padding: 1ex;
+}
+
+td button {
+	width: 100%;
+}
