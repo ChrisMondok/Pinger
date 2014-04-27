@@ -1,14 +1,18 @@
 (function () {
-	if('CustomEvent' in window)
-		return;
-	function CustomEvent ( event, params ) {
-		params = params || { bubbles: false, cancelable: false, detail: undefined };
-		var evt = document.createEvent( 'CustomEvent' );
-		evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-		return evt;
+	try
+	{
+		new CustomEvent('testevent');
+
+		window.makeCustomEvent = function(e) {
+			return new CustomEvent(e);
+		};
 	}
-
-	CustomEvent.prototype = window.Event.prototype;
-
-	window.CustomEvent = CustomEvent;
+	catch (e) {
+		console.warn("Using customEvent polyfill");
+		window.makeCustomEvent = function(e) {
+			var evt = document.createEvent('CustomEvent');
+			evt.initCustomEvent(e, true, false, null);
+			return evt;
+		};
+	}
 })();

@@ -10,7 +10,7 @@ function init() {
 	setInterval(function() {
 		var now = new Date().getTime();
 	
-		var tickEvent = new CustomEvent('gametick');
+		var tickEvent = makeCustomEvent('gametick');
 		tickEvent.dt = (now - last);
 
 		document.dispatchEvent(tickEvent);
