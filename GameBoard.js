@@ -203,6 +203,10 @@ GameBoard.prototype.draw = function(ctx) {
 		ctx.fillStyle = "#000";
 		ctx.fillRect(0, 0, viewportWidth, viewportHeight);
 
+		//draw sky
+		ctx.fillStyle = this.backgroundColor;
+		ctx.fillRect(0, 0, viewportWidth, -Math.min(this.viewportY, 0) + GRIDSIZE);
+
 		ctx.translate(-this.viewportX, -this.viewportY);
 
 		this.drawGround(ctx);
@@ -269,13 +273,10 @@ GameBoard.prototype.drawGrid = function(ctx) {
 
 GameBoard.prototype.drawGround = function(ctx) {
 
-	//draw sky
-	ctx.fillStyle = this.backgroundColor;
-	ctx.fillRect(Math.max(this.viewportX, 0), 0, Math.min(viewportWidth, this.width * GRIDSIZE), GRIDSIZE);
-
 	//draw light brown
 	//ctx.fillStyle = "#d8a278";
 	usingState(ctx, function() {
+		ctx.beginPath();
 		ctx.rect(Math.max(this.viewportX, 0), Math.max(this.viewportY, GRIDSIZE), Math.min(viewportWidth, this.width * GRIDSIZE), viewportHeight);
 		ctx.clip();
 		usingState(ctx, function() {
