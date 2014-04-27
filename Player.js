@@ -16,6 +16,15 @@ var Player = extend(Pawn, function() {
 	this.div.appendChild(pingButton);
 	this.div.appendChild(clearButton);
 	this.gameBoard.div.appendChild(this.div);
+
+	this.images = {
+		right: document.getElementById('player-right'),
+		left: document.getElementById('player-left'),
+		up: document.getElementById('player-up'),
+		down: document.getElementById('player-down')
+	};
+
+	this.direction = "right";
 });
 
 Object.defineProperty(Player.prototype, 'moving', {
@@ -28,16 +37,18 @@ Player.prototype.draw = function(ctx) {
 	Pawn.prototype.draw.apply(this,ctx);
 
 	ctx.fillStyle = "lime";
-	ctx.beginPath();
-	ctx.arc(
-		this.centerX,
-		this.centerY,
-		GRIDSIZE/2 - 3,
-		0,
-		2*Math.PI,
-		false
-	);
-	ctx.fill();
+//	ctx.beginPath();
+//	ctx.arc(
+//		this.centerX,
+//		this.centerY,
+//		GRIDSIZE/2 - 3,
+//		0,
+//		2*Math.PI,
+//		false
+//	);
+//	ctx.fill();
+
+	ctx.drawImage(this.images[this.direction], this.x * GRIDSIZE, this.y * GRIDSIZE);
 
 	if(this.moving) {
 		ctx.strokeStyle = "#000";
@@ -73,8 +84,17 @@ Player.prototype.tick = function(e) {
 Player.prototype.move = function(e) {
 	var i;
 
-	if(this.x == this.targetX && this.y == this.targetY)
+	if(!this.moving)
 		return;
+
+	if(this.x < this.targetX)
+		this.direction = "right";
+	if(this.x > this.targetX)
+		this.direction = "left";
+	if(this.y < this.targetY)
+		this.direction = "down";
+	if(this.y > this.targetY)
+		this.direction = "up";
 
 	var s = this.maxSpeed * e.dt/1000;
 

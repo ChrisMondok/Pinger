@@ -1,3 +1,4 @@
+var PARALLAX = 0.0;
 (function(namespace) {
 	var makeDOM = function() {
 		this.div = document.createElement('div');
@@ -39,10 +40,15 @@
 		this.pawns = [];
 
 		this.dirt = [];
+
+		this.dirtImages = document.getElementsByClassName('dirt-image');
+
+		this.undirtPattern = this.ctx.createPattern(document.getElementById('undirt'), 'repeat');
+
 		for(var x = 0; x < this.width; x++) {
 			var column = this.dirt[x] = [];
 			for (var y = 0; y < this.height; y++) {
-				column[y] = y > 0;
+				column[y] = (y > 0) && Math.floor(Math.random() * this.dirtImages.length);
 			}
 		}
 
@@ -60,6 +66,7 @@
 		this.dugChanged(0);
 
 		this.lost = false;
+
 	};
 })(window);
 
@@ -72,7 +79,7 @@ GameBoard.prototype.dugChanged = function() {
 };
 
 GameBoard.prototype.dig = function(player, x, y) {
-	if(this.dirt[x][y]) {
+	if(this.dirt[x][y] !== false) {
 		this.dug++;
 		this.dirt[x][y] = false;
 		sounds.dirt.play(0.5);
@@ -267,8 +274,16 @@ GameBoard.prototype.drawGround = function(ctx) {
 	ctx.fillRect(Math.max(this.viewportX, 0), 0, Math.min(viewportWidth, this.width * GRIDSIZE), GRIDSIZE);
 
 	//draw light brown
-	ctx.fillStyle = "#d8a278";
-	ctx.fillRect(Math.max(this.viewportX, 0), Math.max(this.viewportY, GRIDSIZE), Math.min(viewportWidth, this.width * GRIDSIZE), viewportHeight);
+	//ctx.fillStyle = "#d8a278";
+	usingState(ctx, function() {
+		ctx.rect(Math.max(this.viewportX, 0), Math.max(this.viewportY, GRIDSIZE), Math.min(viewportWidth, this.width * GRIDSIZE), viewportHeight);
+		ctx.clip();
+		usingState(ctx, function() {
+			ctx.translate(-PARALLAX*this.viewportX, -PARALLAX*this.viewportY);
+			ctx.fillStyle = this.undirtPattern;
+			ctx.fillRect(this.viewportX * (1 + PARALLAX), this.viewportY * (1 + PARALLAX), viewportWidth, viewportHeight);
+		}, this);
+	}, this);
 
 	//draw water
 	ctx.fillStyle = "#0069d5";
@@ -278,8 +293,9 @@ GameBoard.prototype.drawGround = function(ctx) {
 	ctx.fillStyle = "#6c513c";
 	for(var y = 1; y < this.height; y++) {
 		for(var x = 0; x < this.width; x++) {
-			if(this.dirt[x][y])
-			ctx.fillRect(x * GRIDSIZE, y * GRIDSIZE, GRIDSIZE, GRIDSIZE);
+			if(this.dirt[x][y] !== false)
+			ctx.drawImage(this.dirtImages[this.dirt[x][y]], x * GRIDSIZE, y* GRIDSIZE);
+			//ctx.fillRect(x * GRIDSIZE, y * GRIDSIZE, GRIDSIZE, GRIDSIZE);
 		}
 	}
 };
